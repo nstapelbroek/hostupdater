@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/cbednarski/hostess"
+  packages = ["."]
+  revision = "4f98a9f9bd854e31042bec9c5e8c4664fb46c725"
+  version = "v0.3.0"
+
+[[projects]]
+  name = "github.com/codegangsta/cli"
+  packages = ["."]
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
+
+[[projects]]
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
@@ -22,6 +34,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "97eb70e5b0cdcc0eaa2731c309de85cff66b263adf3904f48deb7f66d0d2a5a2"
+  inputs-digest = "41fb703cedf52adde9e0fe834a5ff3663241899d40835dd9762e5bb9cdeb0099"
   solver-name = "gps-cdcl"
   solver-version = 1

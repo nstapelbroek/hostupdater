@@ -3,14 +3,14 @@ package domain
 import "net"
 
 type Hostname struct {
-	name    string
-	address net.IP
+	Name    string
+	Address net.IP
 }
 
 func NewHostname(name string, address net.IP) (*Hostname) {
 	d := new(Hostname)
-	d.name = name
-	d.address = address
+	d.Name = name
+	d.Address = address
 
 	return d
 }
