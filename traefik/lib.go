@@ -1,11 +1,9 @@
-package lib
-
+package traefik
 
 import (
 	"net/http"
-	"errors"
-	"io/ioutil"
-	"fmt"
+		"io/ioutil"
+		"errors"
 )
 
 type ProvidersResponse map[string]Provider
@@ -13,7 +11,7 @@ type BackendCollection map[string]Backend
 type FrontendCollection map[string]Frontend
 
 type Provider struct {
-	Backends BackendCollection
+	Backends  BackendCollection
 	Frontends FrontendCollection
 }
 
@@ -22,7 +20,7 @@ type Backend struct {
 }
 
 type Server struct {
-	Url string
+	Url    string
 	Weight int
 }
 
@@ -34,8 +32,10 @@ type Route struct {
 	Rule string
 }
 
-func getDomains()(err error) {
+func GetDomains() (output string, err error) {
 	var endpoint = "http://localhost:8080/api/providers"
+	output = ""
+
 	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	if err != nil {
 		return
@@ -48,7 +48,7 @@ func getDomains()(err error) {
 
 	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
-		return errors.New("No valid response status")
+		return output, errors.New("No valid response status")
 	}
 
 	responseBody, err := ioutil.ReadAll(response.Body)
@@ -56,7 +56,5 @@ func getDomains()(err error) {
 		return
 	}
 
-	fmt.Sprintf(string(responseBody))
-
-	return
+	return string(responseBody), nil
 }

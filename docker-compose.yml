@@ -1,5 +1,6 @@
 version: '3'
 
+# Docker compose file for testing several integrations
 services:
   reverse-proxy:
     image: traefik # The official Traefik docker image
@@ -9,3 +10,12 @@ services:
       - "8080:8080" # The Web UI (enabled by --api)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  some-project-app:
+    image: nstapelbroek/static-webserver:latest
+    deploy:
+      replicas: 1
+      labels:
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:myproject.local,myproject.somedomain"
+      - "traefik.enable=true"
