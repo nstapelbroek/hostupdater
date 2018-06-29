@@ -13,9 +13,5 @@ services:
 
   some-project-app:
     image: nstapelbroek/static-webserver:latest
-    deploy:
-      replicas: 1
-      labels:
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host:myproject.local,myproject.somedomain"
-      - "traefik.enable=true"
+    labels:
+      - "traefik.frontend.rule=Host:testproject.localhost"
