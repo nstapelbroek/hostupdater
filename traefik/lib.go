@@ -6,13 +6,11 @@ import (
 	"errors"
 	"encoding/json"
 	"strings"
-	"github.com/nstapelbroek/hostupdater/domain"
-	"net"
+	"fmt"
 )
 
-func GetHosts() (hosts []*domain.Hostname, err error) {
-	ip := net.ParseIP("127.0.0.1")
-	var endpoint = "http://127.0.0.1:8080/api/providers" // @todo make Traefik endpoint configurable
+func GetHosts(traefikAddress string) (hosts []string, err error) {
+	var endpoint = fmt.Sprintf("http://%s/api/providers", traefikAddress)
 	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	if err != nil {
 		return
@@ -46,8 +44,7 @@ func GetHosts() (hosts []*domain.Hostname, err error) {
 					continue
 				}
 
-				var newHost = domain.NewHostname(strings.TrimPrefix(routes.Rule, "Host:"), ip)
-				hosts = append(hosts, newHost)
+				hosts = append(hosts, strings.TrimPrefix(routes.Rule, "Host:"))
 			}
 		}
 	}
