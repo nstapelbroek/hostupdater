@@ -2,40 +2,17 @@ package traefik
 
 import (
 	"net/http"
-		"io/ioutil"
-		"errors"
+	"io/ioutil"
+	"errors"
+	"encoding/json"
+	"strings"
+	"github.com/nstapelbroek/hostupdater/domain"
+	"net"
 )
 
-type ProvidersResponse map[string]Provider
-type BackendCollection map[string]Backend
-type FrontendCollection map[string]Frontend
-
-type Provider struct {
-	Backends  BackendCollection
-	Frontends FrontendCollection
-}
-
-type Backend struct {
-	Servers map[string]Server
-}
-
-type Server struct {
-	Url    string
-	Weight int
-}
-
-type Frontend struct {
-	Routes map[string]Route
-}
-
-type Route struct {
-	Rule string
-}
-
-func GetDomains() (output string, err error) {
-	var endpoint = "http://localhost:8080/api/providers"
-	output = ""
-
+func GetHosts() (hosts []*domain.Hostname, err error) {
+	ip := net.ParseIP("127.0.0.1")
+	var endpoint = "http://127.0.0.1:8080/api/providers" // @todo make Traefik endpoint configurable
 	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	if err != nil {
 		return
@@ -48,7 +25,7 @@ func GetDomains() (output string, err error) {
 
 	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
-		return output, errors.New("No valid response status")
+		return nil, errors.New("No valid response status")
 	}
 
 	responseBody, err := ioutil.ReadAll(response.Body)
@@ -56,5 +33,24 @@ func GetDomains() (output string, err error) {
 		return
 	}
 
-	return string(responseBody), nil
+	var providers ProvidersResponse
+	err = json.Unmarshal(responseBody, &providers)
+	if err != nil {
+		return
+	}
+
+	for _, provider := range providers {
+		for _, frontend := range provider.Frontends {
+			for _, routes := range frontend.Routes {
+				if (!strings.HasPrefix(routes.Rule, "Host:")) {
+					continue
+				}
+
+				var newHost = domain.NewHostname(strings.TrimPrefix(routes.Rule, "Host:"), ip)
+				hosts = append(hosts, newHost)
+			}
+		}
+	}
+
+	return
 }

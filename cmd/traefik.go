@@ -16,7 +16,7 @@ var traefikCmd = &cobra.Command{
 	Long:  `Retrieve host information from a traefik loadbalancer.
 			If no --source flag is passed, it will fetch from http://localhost:8080`,
 	Run: func(cmd *cobra.Command, args []string) {
-		domains, _ := traefik.GetDomains()
+		domains, _ := traefik.GetHosts()
 		fmt.Println(domains)
 	},
 }
