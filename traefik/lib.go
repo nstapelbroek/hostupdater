@@ -25,7 +25,7 @@ func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []string, err error) {
 
 	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
-		return nil, errors.New("No valid response status")
+		return nil, errors.New("api providers endpoint responded with a non 200 status code")
 	}
 
 	responseBody, err := ioutil.ReadAll(response.Body)
@@ -42,7 +42,7 @@ func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []string, err error) {
 	for _, provider := range providers {
 		for _, frontend := range provider.Frontends {
 			for _, routes := range frontend.Routes {
-				if (!strings.HasPrefix(routes.Rule, "Host:")) {
+				if !strings.HasPrefix(routes.Rule, "Host:") {
 					continue
 				}
 
