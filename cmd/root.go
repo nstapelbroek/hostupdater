@@ -8,8 +8,9 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "hostupdater",
-	Short: "HostUpdater is a simple binary that manages your hostfile",
-	Long: `Todo: needs a long description. See https://nstapelbroek.com`,
+	Short: "hostupdater is a simple binary that manages your hostfile",
+	Long: `hostupdater aims to provide just the right amount of glue between your docker setup and a hostsfile.
+Use the binary to patch your hostfile with the routing information collected form popular local development solutions like minicube, docker-compose, traefik, vagrant or directly from the docker socket.`,
 }
 
 func Execute() {

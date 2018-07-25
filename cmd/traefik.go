@@ -17,7 +17,7 @@ func init() {
 
 var traefikCmd = &cobra.Command{
 	Use:   "traefik",
-	Short: "Retrieve host information from a traefik loadbalancer",
+	Short: "Retrieve frontend routing information from a Traefik router",
 	Run: func(cmd *cobra.Command, args []string) {
 		address, _ := cmd.Flags().GetString("address")
 		port, _ := cmd.Flags().GetInt16("port")
@@ -29,7 +29,7 @@ var traefikCmd = &cobra.Command{
 
 		hosts, err := traefik.GetHosts(traefikIp, port)
 		if err != nil {
-			logrus.WithFields(logrus.Fields{"traefik-ip": traefikIp, "traefik-port": port}).Error(err)
+			logrus.WithFields(logrus.Fields{"ip": traefikIp, "port": port}).Error(err)
 			os.Exit(1)
 		}
 
