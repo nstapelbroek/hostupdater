@@ -11,8 +11,8 @@ import (
 
 func init() {
 	rootCmd.AddCommand(traefikCmd)
-	traefikCmd.Flags().String("address", "127.0.0.1", "The IP of the traefik loadbalancer we're trying to fetch the frontend configuration from")
-	traefikCmd.Flags().Int16("port", 8080, "The port where the traefik host is serving it's API. We need this API to fetch the hosts")
+	traefikCmd.Flags().String("address", "127.0.0.1", "The IP of the Traefik server we're trying to fetch the frontend configuration from.")
+	traefikCmd.Flags().Int16("port", 8080, "The port where the Traefik host is serving it's API.")
 }
 
 var traefikCmd = &cobra.Command{
@@ -55,10 +55,10 @@ var traefikCmd = &cobra.Command{
 
 		err = hostfile.Save()
 		if err != nil {
-			logrus.Errorln("failed persist changes to hostfile.", err)
+			logrus.Errorln("failed persist changes to hostsfile.", err)
 			os.Exit(1)
 		} else {
-			logrus.Infoln("changes persisted onto hostsfile")
+			logrus.Infoln("changes persisted into hostsfile")
 		}
 	},
 }
