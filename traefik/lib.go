@@ -7,15 +7,17 @@ import (
 	"encoding/json"
 	"strings"
 	"fmt"
+	"net"
 )
 
-func GetHosts(traefikAddress string) (hosts []string, err error) {
-	var endpoint = fmt.Sprintf("http://%s/api/providers", traefikAddress)
-	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
-	if err != nil {
-		return
+func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []string, err error) {
+	// We'll make the traefikPort argument optional by overwriting it's default value with the default HTTP traefikPort
+	if traefikPort == 0 {
+		traefikPort = 80
 	}
 
+	var endpoint = fmt.Sprintf("http://%s:%d/api/providers", traefikIp.String(), traefikPort)
+	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
 		return

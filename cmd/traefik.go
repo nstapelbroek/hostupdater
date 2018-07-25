@@ -6,23 +6,29 @@ import (
 	"github.com/cbednarski/hostess"
 	"fmt"
 	"os"
-	)
+	"github.com/nstapelbroek/hostupdater/helper"
+)
 
 func init() {
 	rootCmd.AddCommand(traefikCmd)
-	traefikCmd.Flags().String("traefik-address",  "127.0.0.1:8080", "The IP of the traefik API server we're trying to fetch the frontend configuration from, this usually references your loadbalancer from the docker internal network" )
-	traefikCmd.Flags().String("host-address",  "127.0.0.1", "The overwritten IP address where all frontends should point towards" )
+	traefikCmd.Flags().String("address", "127.0.0.1", "The IP of the traefik loadbalancer we're trying to fetch the frontend configuration from")
+	traefikCmd.Flags().Int16("port", 8080, "The port where the traefik host is serving it's API. We need this API to fetch the hosts")
 }
 
 var traefikCmd = &cobra.Command{
 	Use:   "traefik",
 	Short: "Retrieve host information from a traefik loadbalancer",
 	Run: func(cmd *cobra.Command, args []string) {
-		treafikIp, _ := cmd.Flags().GetString("traefik-address")
-		outputIp, _ := cmd.Flags().GetString("host-address")
+		address, _ := cmd.Flags().GetString("address")
+		port, _ := cmd.Flags().GetInt16("port")
+		traefikIp, err := helper.AddressToIp(address)
+		if err != nil {
+			fmt.Errorf("%s", err)
+			os.Exit(1)
+		}
 
-		hosts, err := traefik.GetHosts(treafikIp)
-		if (err != nil) {
+		hosts, err := traefik.GetHosts(traefikIp, port)
+		if err != nil {
 			fmt.Errorf("%s", err)
 			os.Exit(1)
 		}
@@ -36,8 +42,8 @@ var traefikCmd = &cobra.Command{
 		}
 
 		for _, host := range hosts {
-			hostname, err := hostess.NewHostname(host, outputIp, true)
-			if(err != nil) {
+			hostname, err := hostess.NewHostname(host, traefikIp.String(), true)
+			if err != nil {
 				fmt.Errorf("%s", err)
 				os.Exit(1)
 			}
