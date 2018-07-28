@@ -12,11 +12,6 @@ import (
 )
 
 func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []*hostess.Hostname, err error) {
-	// We'll make the traefikPort argument optional by overwriting it's default value with the default HTTP traefikPort
-	if traefikPort == 0 {
-		traefikPort = 80
-	}
-
 	var endpoint = fmt.Sprintf("http://%s:%d/api/providers", traefikIp.String(), traefikPort)
 	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	response, err := http.DefaultClient.Do(request)
