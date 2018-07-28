@@ -8,7 +8,7 @@ func AddressToIp(address string) (ip net.IP, err error) {
 		return
 	}
 
-	resolvedIp, err := net.LookupIP("ispycode.com")
+	resolvedIp, err := net.LookupIP(address)
 	if err != nil {
 		return
 	}
