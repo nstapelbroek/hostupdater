@@ -8,9 +8,10 @@ import (
 	"strings"
 	"fmt"
 	"net"
+	"github.com/cbednarski/hostess"
 )
 
-func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []string, err error) {
+func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []*hostess.Hostname, err error) {
 	// We'll make the traefikPort argument optional by overwriting it's default value with the default HTTP traefikPort
 	if traefikPort == 0 {
 		traefikPort = 80
@@ -46,7 +47,12 @@ func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []string, err error) {
 					continue
 				}
 
-				hosts = append(hosts, strings.TrimPrefix(routes.Rule, "Host:"))
+				hostname, err := hostess.NewHostname(strings.TrimPrefix(routes.Rule, "Host:"), traefikIp.String(), true)
+				if err != nil {
+					continue
+				}
+
+				hosts = append(hosts, hostname)
 			}
 		}
 	}

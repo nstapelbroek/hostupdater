@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/nstapelbroek/hostupdater/traefik"
-	"github.com/cbednarski/hostess"
 	"github.com/nstapelbroek/hostupdater/helper"
 	"github.com/Sirupsen/logrus"
 	"os"
@@ -33,32 +32,10 @@ var traefikCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		hostfile, errors := hostess.LoadHostfile()
-		if len(errors) > 0 {
-			for _, err := range errors {
-				logrus.Errorln(err)
-			}
-			os.Exit(1)
-		}
-
-		for _, host := range hosts {
-			hostname, err := hostess.NewHostname(host, traefikIp.String(), true)
-			if err != nil {
-				logrus.Errorln(err)
-				os.Exit(1)
-			}
-
-			// Note that we skip error checking here because hostess will error on update or duplicate
-			hostfile.Hosts.Add(hostname)
-			logrus.WithFields(logrus.Fields{"domain": hostname.Domain, "ip": hostname.IP.String(),}).Info("created or updated record")
-		}
-
-		err = hostfile.Save()
+		err = helper.WriteHostsToFile(hosts)
 		if err != nil {
 			logrus.Errorln("failed persist changes to hostsfile.", err)
 			os.Exit(1)
-		} else {
-			logrus.Infoln("changes persisted into hostsfile")
 		}
 	},
 }
