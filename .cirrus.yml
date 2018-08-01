@@ -1,0 +1,8 @@
+container:
+  image: golang:latest
+
+test_task:
+  env:
+    CIRRUS_WORKING_DIR: /go/src/github.com/$CIRRUS_REPO_FULL_NAME
+  get_script: curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.9.3
+  test_script: golangci-lint run
