@@ -5,12 +5,15 @@ lint_task:
   env:
     CIRRUS_WORKING_DIR: /go/src/github.com/$CIRRUS_REPO_FULL_NAME
 
+  ci_tools_cache:
+    folder: $GOPATH/bin
+
+  get_dep_script: dep version || curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  get_golanci_lint_script: golanci-lint --version || curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.9.3
+
   dep_cache:
     folder: vendor
     fingerprint_script: cat Gopkg.lock
     populate_script: dep ensure
 
-  get_dep_script: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  get_golanci_lint_script: curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.9.3
-  dep_ensure_script: dep ensure
   lint_script: golangci-lint run
