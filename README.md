@@ -1,6 +1,6 @@
 # Hostupdater
 
-[![Build Status][travis-image]][travis-url]
+[![Build Status](https://api.cirrus-ci.com/github/nstapelbroek/hostupdater.svg)](https://cirrus-ci.com/github/nstapelbroek/hostupdater)
 [![Dockerfile][dockerfile-thingy]][dockerhub-url]
 
 > Use the hostupdater to patch your hostfile with the routing information collected form popular local development solutions like minicube, docker-compose and traefik.
