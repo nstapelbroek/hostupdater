@@ -18,8 +18,10 @@ func WriteHostsToFile(hosts []*hostess.Hostname) (err error) {
 			continue
 		}
 
+		// Both duplicate and conflicts return errors so you are aware of them
+		_ = hostfile.Hosts.Add(host)
+
 		shouldSave = true
-		hostfile.Hosts.Add(host)
 		logrus.WithFields(logrus.Fields{"domain": host.Domain, "ip": host.IP.String(),}).Info("created or updated record")
 	}
 
