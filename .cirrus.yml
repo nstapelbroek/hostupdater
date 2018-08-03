@@ -1,5 +1,5 @@
 container:
-  image: golang:latest
+  image: golang:1.9
 
 lint_task:
   env:
@@ -40,3 +40,14 @@ test_task:
     populate_script: dep ensure
 
   test_script: go test
+
+publish_task:
+  only_if: $BRANCH == 'latest' || $BRANCH == 'stable'
+  depends_on:
+  - test
+  - lint
+  build_script:
+    - docker login -u="nstapelbroekbot" -p="ENCRYPTED[aa19d1b13c4c45c6bda1f837e7330b7514457a26d411a12993f4e8535cbc55b1d13e7ff6c78b4aa63edff97917891a4d]";
+    - make build TAGNAME=$BRANCH
+    - docker tag nstapelbroek/hostupdater:$BRANCH docker.io/nstapelbroek/hostupdater:$BRANCH
+    - docker push docker.io/nstapelbroek/hostupdater

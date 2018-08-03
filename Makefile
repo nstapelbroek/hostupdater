@@ -1,4 +1,4 @@
-.PHONY: build, run
+.PHONY: build
 
 PROJECTNAME=nstapelbroek/hostupdater
 TAGNAME=UNDEF
@@ -10,7 +10,3 @@ build:
 	CGO_ENABLED=0 GOOS=linux go build  -ldflags '-w -s' -a -installsuffix cgo -o hostupdater .
 	docker build --tag $(PROJECTNAME):$(TAGNAME_CLEAN) --pull .
 	rm hostupdater
-
-run:
-	if [ "$(TAGNAME)" = "UNDEF" ]; then echo "please provide a valid TAGNAME" && exit 1; fi
-	docker run --rm --name hostupdater-run -v /etc/hosts:/etc/hosts $(PROJECTNAME):$(TAGNAME_CLEAN) traefik --address traefik
