@@ -41,13 +41,16 @@ test_task:
 
   test_script: go test
 
-publish_task:
+docker_builder:
   only_if: $BRANCH == 'latest' || $BRANCH == 'stable'
   depends_on:
   - test
   - lint
-  build_script:
-    - docker login -u="nstapelbroekbot" -p="ENCRYPTED[aa19d1b13c4c45c6bda1f837e7330b7514457a26d411a12993f4e8535cbc55b1d13e7ff6c78b4aa63edff97917891a4d]";
-    - make build TAGNAME=$BRANCH
+  env:
+    DOCKER_USERNAME: ENCRYPTED[60dbb7844e25362a784b72bce0581cb62c1878facb1ce6c79af0c5b23ddff049d90fc3237b886e9fb7ccbcf5ac973464]
+    DOCKER_PASSWORD: ENCRYPTED[aa19d1b13c4c45c6bda1f837e7330b7514457a26d411a12993f4e8535cbc55b1d13e7ff6c78b4aa63edff97917891a4d]
+  login_script: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+  build_script: make build TAGNAME=$BRANCH
+  push_script:
     - docker tag nstapelbroek/hostupdater:$BRANCH docker.io/nstapelbroek/hostupdater:$BRANCH
     - docker push docker.io/nstapelbroek/hostupdater
