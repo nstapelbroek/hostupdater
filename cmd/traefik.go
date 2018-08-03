@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/nstapelbroek/hostupdater/traefik"
 	"github.com/nstapelbroek/hostupdater/helper"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"time"
 	"net"
 )

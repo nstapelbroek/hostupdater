@@ -2,7 +2,7 @@ package helper
 
 import (
 	"github.com/cbednarski/hostess"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 func WriteHostsToFile(hosts []*hostess.Hostname) (err error) {
