@@ -4,7 +4,7 @@
 [![Image details](https://images.microbadger.com/badges/image/nstapelbroek/hostupdater.svg)](https://hub.docker.com/r/nstapelbroek/hostupdater/tags/)
 [![Image git ref](https://images.microbadger.com/badges/commit/nstapelbroek/hostupdater.svg)](https://microbadger.com/images/nstapelbroek/hostupdater)
 
-> Use the hostupdater to patch your hostfile with the routing information collected form popular local development solutions like minicube, docker-compose and traefik.
+> Use the hostupdater to patch your hostfile with the routing information collected form popular loadbalancers like traefik.
 
 ![traefik example](./docs/traefik-example.gif)
 
