@@ -51,5 +51,5 @@ docker_builder:
     DOCKER_PASSWORD: ENCRYPTED[aa19d1b13c4c45c6bda1f837e7330b7514457a26d411a12993f4e8535cbc55b1d13e7ff6c78b4aa63edff97917891a4d]
   login_script: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   build_script: docker build --tag docker.io/nstapelbroek/hostupdater:$CIRRUS_BRANCH --pull --build-arg VCS_REF=$CIRRUS_CHANGE_IN_REPO .
-  push_script:
-    - docker push docker.io/nstapelbroek/hostupdater
+  push_script: docker push docker.io/nstapelbroek/hostupdater
+  meta_script: curl -X POST ENCRYPTED[d0e9e2e67958eb7f9f12bb7257ff8875732026f58baef2693d270a75f122317bd7966512373cd04786c4043dc5db7841]
