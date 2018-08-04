@@ -26,7 +26,7 @@ func WriteHostsToFile(hosts []*hostess.Hostname) (err error) {
 	}
 
 	if !shouldSave {
-		logrus.Infoln("no changes to hostfile needed")
+		logrus.Debugln("no changes to hostfile needed")
 		return
 	}
 
