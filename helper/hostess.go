@@ -30,6 +30,5 @@ func WriteHostsToFile(hosts []*hostess.Hostname) (err error) {
 		return
 	}
 
-	err = hostfile.Save()
-	return
+	return hostfile.Save()
 }

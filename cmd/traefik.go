@@ -20,6 +20,10 @@ var traefikCmd = &cobra.Command{
 	Use:   "traefik",
 	Short: "Retrieve frontend routing information from a Traefik router",
 	RunE: func(cmd *cobra.Command, args []string) (err error) {
+		if v, _ := rootCmd.PersistentFlags().GetBool("verbose"); v {
+			logrus.SetLevel(logrus.DebugLevel)
+		}
+
 		address, _ := cmd.Flags().GetString("address")
 		port, _ := cmd.Flags().GetInt16("port")
 		interval, _ := cmd.Flags().GetInt8("interval")
