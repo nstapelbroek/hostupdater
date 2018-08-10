@@ -14,6 +14,7 @@ func init() {
 	traefikCmd.Flags().String("address", "127.0.0.1", "The IP of the Traefik server we're trying to fetch the frontend configuration from.")
 	traefikCmd.Flags().Int16("port", 8080, "The port where the Traefik host is serving it's API.")
 	traefikCmd.Flags().Int8("interval", 0, "Update every X seconds, use the default value of 0 for a single execution.")
+	traefikCmd.Flags().Int8("wait", 0, "Wait an ammount of X seconds before execution, usefull when starting docker-compose files and not every service is registered")
 }
 
 var traefikCmd = &cobra.Command{
@@ -24,10 +25,12 @@ var traefikCmd = &cobra.Command{
 			logrus.SetLevel(logrus.DebugLevel)
 		}
 
+		waitTime, _ := cmd.Flags().GetInt8("wait")
 		address, _ := cmd.Flags().GetString("address")
 		port, _ := cmd.Flags().GetInt16("port")
 		interval, _ := cmd.Flags().GetInt8("interval")
 
+		time.Sleep(time.Duration(waitTime) * time.Second)
 		traefikIp, err := helper.AddressToIp(address)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{"address": address}).Error("failed resolving address to a usable IP")
