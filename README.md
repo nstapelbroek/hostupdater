@@ -15,7 +15,7 @@
 The hostupdater can read the frontend rules from a [Traefik](https://traefik.io/) load balancer by using its API.
 Make sure the Traefik API is enabled by using `--api` and point your hostupdater towards the endpoint.
 
-An example:
+An inline example:
 ```sh
 # Start a traefik container that auto-registers new containers by listening to the docker socket
 docker run -d -p 80:80 -p 8080:8080 --name traefik -v /var/run/docker.sock:/var/run/docker.sock:ro traefik --docker --api
@@ -27,3 +27,53 @@ docker run -d --name hostupdater -v /etc/hosts:/etc/hosts nstapelbroek/hostupdat
 # To proof that it works, launch a ghost blog container
 docker run -d --label traefik.frontend.rule=Host:ghost.local --name testdrive-ghost-blog ghost && echo "you can now visit http://ghost.local"
 ```
+
+Hostupdater can really help when using multiple docker-compose stacks. Embed a hostupdater and traefik service to your docker-compose to set yourself free of all published port issues.
+
+A docker-compose example:
+```
+version: '2'
+
+services:
+  traefik:
+    image: traefik:alpine
+    command: --api --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  hostupdater:
+    image: docker.io/nstapelbroek/hostupdater:latest
+    command: traefik --address traefik --wait 5
+    depends_on:
+      - "traefik"
+    volumes:
+      - /etc/hosts:/etc/hosts
+
+  app:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    volumes:
+      - .:/www
+    depends_on:
+      - mariadb
+    labels:
+      - 'traefik.frontend.rule=Host:local.myproject.com'
+
+  mariadb:
+    image: mariadb:10.2
+    environment:
+      MYSQL_DATABASE: project
+      MYSQL_USER: project_user
+      MYSQL_PASSWORD: changemeplease
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    labels:
+      - 'traefik.frontend.rule=Host:mailhog.local.myproject.com'
+      - 'traefik.frontend.port=8025'
+```
+
+After a `docker-compose up` you can visit http://local.myproject.com and http://mailhog.local.myproject.com while the services can keep on using the integrated DNS resolver of docker to connect within the network.
+
+
