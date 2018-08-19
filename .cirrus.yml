@@ -39,7 +39,7 @@ test_task:
     fingerprint_script: cat Gopkg.lock
     populate_script: dep ensure
 
-  test_script: go test
+  test_script: go test ./...
 
 docker_builder:
   only_if: $CIRRUS_BRANCH == 'latest' || $CIRRUS_BRANCH == 'stable'
