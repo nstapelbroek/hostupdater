@@ -8,10 +8,9 @@ import (
 	"strings"
 	"fmt"
 	"net"
-	"github.com/cbednarski/hostess"
 )
 
-func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []*hostess.Hostname, err error) {
+func GetFrontendHosts(traefikIp net.IP, traefikPort int16) (hosts []string, err error) {
 	var endpoint = fmt.Sprintf("http://%s:%d/api/providers", traefikIp.String(), traefikPort)
 	request, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	response, err := http.DefaultClient.Do(request)
@@ -42,7 +41,7 @@ func GetHosts(traefikIp net.IP, traefikPort int16) (hosts []*hostess.Hostname, e
 					continue
 				}
 
-				hostname, err := hostess.NewHostname(strings.TrimPrefix(routes.Rule, "Host:"), traefikIp.String(), true)
+				hostname := strings.TrimPrefix(routes.Rule, "Host:")
 				if err != nil {
 					continue
 				}

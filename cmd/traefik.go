@@ -5,6 +5,7 @@ import (
 	"github.com/nstapelbroek/hostupdater/traefik"
 	"github.com/nstapelbroek/hostupdater/helper"
 	"github.com/sirupsen/logrus"
+	"github.com/cbednarski/hostess"
 	"time"
 )
 
@@ -64,18 +65,50 @@ var traefikCmd = &cobra.Command{
 }
 
 func updateHostsFromTraefikApi(address traefik.Address, filter string) (err error) {
-	hosts, err := traefik.GetHosts(address.IP, address.PortNumber)
+	frontendHosts, err := traefik.GetFrontendHosts(address.IP, address.PortNumber)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{"ip": address.IP, "port": address.PortNumber}).Error(err)
 		return
 	}
 
-	// Filter the results here
+	filteredHosts := make([]*hostess.Hostname, len(frontendHosts))
+	for i, host := range frontendHosts {
+		hostName, _ := hostess.NewHostname(host, address.IP.String(), true)
+		filteredHosts = append(filteredHosts[:i], hostName)
+	}
 
-	err = helper.WriteHostsToFile(hosts)
+	err = writeHostsToFile(filteredHosts)
 	if err != nil {
 		logrus.Errorln("failed persist changes to hostsfile.", err)
 	}
 
 	return
+}
+
+func writeHostsToFile(hosts []*hostess.Hostname) (err error) {
+	hostfile, errors := hostess.LoadHostfile()
+	if len(errors) > 0 {
+		err = errors[0]
+		return
+	}
+
+	shouldSave := false
+	for _, host := range hosts {
+		if hostfile.Hosts.Contains(host) {
+			continue
+		}
+
+		// Both duplicate and conflicts return errors so you are aware of them
+		_ = hostfile.Hosts.Add(host)
+
+		shouldSave = true
+		logrus.WithFields(logrus.Fields{"domain": host.Domain, "ip": host.IP.String(),}).Info("created or updated record")
+	}
+
+	if !shouldSave {
+		logrus.Debugln("no changes to hostfile needed")
+		return
+	}
+
+	return hostfile.Save()
 }
