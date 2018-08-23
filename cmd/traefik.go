@@ -15,8 +15,8 @@ func init() {
 	traefikCmd.Flags().String("address", "127.0.0.1", "The IP of the Traefik server we're trying to fetch the frontend configuration from.")
 	traefikCmd.Flags().Int16("port", 8080, "The port where the Traefik host is serving it's API.")
 	traefikCmd.Flags().Int8("interval", 0, "Update every X seconds, use the default value of 0 for a single execution.")
-	traefikCmd.Flags().Int8("wait", 0, "Wait an amount of X seconds before execution allowing services to pass health-checks and register")
-	traefikCmd.Flags().String("filter", "", "Only update the hosts who pass this regular expression, useful when using multiple loadbalancers")
+	traefikCmd.Flags().Int8("wait", 0, "Wait an amount of X seconds before execution allowing services to pass their health-checks")
+	traefikCmd.Flags().String("filter", "", "Only update the hosts who pass this regular expression")
 }
 
 var traefikCmd = &cobra.Command{
