@@ -48,7 +48,7 @@ var traefikCmd = &cobra.Command{
 			return
 		}
 
-		err = updateHostsFromTraefikApi(TraefikAddress, filterExpression)
+		err = updateHostsFromTraefikApi(&TraefikAddress, filterExpression)
 		if err != nil || interval == 0 {
 			return
 		}
@@ -59,7 +59,7 @@ var traefikCmd = &cobra.Command{
 		for {
 			select {
 			case <-ticker.C:
-				if err := updateHostsFromTraefikApi(TraefikAddress, filterExpression); err != nil {
+				if err := updateHostsFromTraefikApi(&TraefikAddress, filterExpression); err != nil {
 					return err
 				}
 			case <-quit:
@@ -70,7 +70,7 @@ var traefikCmd = &cobra.Command{
 	},
 }
 
-func updateHostsFromTraefikApi(address traefik.Address, filterExpression *regexp.Regexp) (err error) {
+func updateHostsFromTraefikApi(address *traefik.Address, filterExpression *regexp.Regexp) (err error) {
 	frontendHosts, err := traefik.GetFrontendHosts(address.IP, address.PortNumber)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{"ip": address.IP, "port": address.PortNumber}).Error(err)
