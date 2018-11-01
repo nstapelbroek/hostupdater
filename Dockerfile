@@ -1,5 +1,5 @@
 # Build environment
-FROM golang:1.9 AS build-env
+FROM golang:1.11 AS build-env
 # GOPATH is /go
 WORKDIR  /go/src/github.com/nstapelbroek/hostupdater 
 
