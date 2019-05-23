@@ -26,9 +26,9 @@ test_task:
   container:
     matrix:
       image: golang:latest
-      image: golang:1.9
       image: golang:1.10
       image: golang:1.11
+      image: golang:1.12
 
   ci_tools_cache:
     folder: $GOPATH/bin
