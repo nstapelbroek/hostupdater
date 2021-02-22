@@ -34,6 +34,20 @@
   version = "v1.0"
 
 [[projects]]
+  digest = "1:e194fb33726530d36a1d2dceffd3459e90a11002b60e901d5bf636f78dd622f3"
+  name = "github.com/magefile/mage"
+  packages = [
+    "internal",
+    "mage",
+    "mg",
+    "parse",
+    "sh",
+  ]
+  pruneopts = ""
+  revision = "07afc7d24f4d6d6442305d49552f04fbda5ccb3e"
+  version = "v1.11.0"
+
+[[projects]]
   digest = "1:256484dbbcd271f9ecebc6795b2df8cad4c458dd0f5fd82a8c2fa0c29f233411"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
@@ -42,12 +56,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:2f8f9b60ebe029a83f92a7549926145eb6014c01d256946058a5a8768efd4522"
+  digest = "1:f5fd0ab2cc44bc19b51e0809065b7f2075b1eb5f7240d90d9a3867347178cd75"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   pruneopts = ""
-  revision = "6699a89a232f3db797f2e280639854bbc4b89725"
-  version = "v1.7.0"
+  revision = "d59e5619da7b597f81da5b56ba4f315daba0a667"
+  version = "v1.8.0"
 
 [[projects]]
   digest = "1:832695f69f594dffe9fac453b9937c21d2f0c8fb2d744c7542ef1b269044cc04"
